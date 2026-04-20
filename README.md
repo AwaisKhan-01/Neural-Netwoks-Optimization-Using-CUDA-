@@ -75,6 +75,8 @@ git clone https://github.com/AwaisKhan-01/Neural-Netwoks-Optimization-Using-CUDA
 cd Neural-Netwoks-Optimization-Using-CUDA-
 ```
 
+> Note: the GitHub repository slug currently uses `Netwoks` (without the second `r`), so keep the clone path exactly as shown.
+
 ### 2) Prepare MNIST files (required path layout)
 
 Code expects nested IDX paths like:
