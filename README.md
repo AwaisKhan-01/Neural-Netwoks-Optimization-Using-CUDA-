@@ -68,12 +68,15 @@ Detailed diagram notes: [`docs/architecture.md`](docs/architecture.md)
 
 ## Dataset Setup
 
-Expected files under `data/`:
+Expected files under `data/` (matching this repository’s current nested layout):
 
-- `train-images-idx3-ubyte/train-images-idx3-ubyte`
-- `train-labels-idx1-ubyte/train-labels-idx1-ubyte`
-- `t10k-images-idx3-ubyte/t10k-images-idx3-ubyte`
-- `t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte`
+```text
+data/
+├── train-images-idx3-ubyte/train-images-idx3-ubyte
+├── train-labels-idx1-ubyte/train-labels-idx1-ubyte
+├── t10k-images-idx3-ubyte/t10k-images-idx3-ubyte
+└── t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte
+```
 
 MNIST source: http://yann.lecun.com/exdb/mnist/
 
