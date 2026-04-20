@@ -137,7 +137,7 @@ grep -E "CPU Total Time|GPU Total Time|Test Accuracy" v3_run.log
 
 ## Results (Current + Placeholder for Your Latest Runs)
 
-| Variant | Runtime Signal | Accuracy Signal | Relative Speed |
+| Variant | Indicative Timing Metric* | Accuracy Signal | Relative Speed |
 |---|---:|---:|---:|
 | V1 CPU | ~24s total training (example run) | ~97% test accuracy | 1.0x baseline |
 | V2 CUDA naive | _(fill from your run)_ | _(fill from your run)_ | _(expected: limited or mixed gains)_ |
@@ -145,6 +145,8 @@ grep -E "CPU Total Time|GPU Total Time|Test Accuracy" v3_run.log
 | V4 cuBLAS/Tensor | ~5.82s GPU time (historical note) | ~91.93% (historical note) | ~4.51x (historical note) |
 
 > Replace placeholders with fresh benchmark logs from your target hardware before sharing with recruiters.
+>
+> \* Timing entries above are historical values from mixed metric types (CPU total training time vs. GPU-reported time). For strict comparison, re-run all variants and report one consistent metric definition.
 
 ## Project Structure
 
