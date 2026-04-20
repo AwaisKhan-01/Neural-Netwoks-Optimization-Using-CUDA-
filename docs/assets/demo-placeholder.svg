@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-label="Demo placeholder">
+  <rect width="960" height="540" fill="#0b1020"/>
+  <rect x="40" y="40" width="880" height="460" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="480" y="230" text-anchor="middle" fill="#e5e7eb" font-family="Arial, sans-serif" font-size="36" font-weight="700">Demo Placeholder</text>
+  <text x="480" y="280" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="22">Replace with benchmark GIF or screenshot</text>
+  <text x="480" y="320" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="18">docs/assets/demo.gif</text>
+</svg>
