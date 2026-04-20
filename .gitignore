@@ -1,2 +1,44 @@
-v2
-n
+# Build outputs
+*.o
+*.obj
+*.out
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# CUDA / NVCC intermediates
+*.ptx
+*.cubin
+*.fatbin
+*.nvvp
+*.nsys-rep
+*.qdrep
+
+# Profiling outputs
+gmon.out
+gprof_*.txt
+callgraph.dot
+callgraph.png
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

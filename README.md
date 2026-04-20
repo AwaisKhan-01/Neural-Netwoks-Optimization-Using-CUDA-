@@ -1,61 +1,133 @@
- 
-Neural Network Acceleration on GPUs for MNIST Classification
-Overview
-This project accelerates a neural network for MNIST digit classification using CUDA on GPUs, with four implementations:
+# Neural Networks Optimization Using CUDA
 
-V1: Sequential CPU
-V2: Naive GPU with CUDA
-V3: Optimized GPU with dynamic configurations and streams
-V4: Advanced GPU using Tensor Cores via cuBLAS with TF32
+This project is a performance-focused implementation of MNIST digit classification that compares a baseline CPU training loop with progressively optimized CUDA implementations. It is designed as an AI engineering portfolio project to show practical model training, profiling, and systems-level optimization work in one place.
 
-Prerequisites
+The core AI/ML workload is a 2-layer neural network (`784 -> 128 -> 10`) trained on MNIST. CUDA acceleration is applied to forward/backward pass kernels, memory transfer strategy, stream usage, and (in V4) Tensor Core-backed matrix operations through cuBLAS.
 
-Hardware: CPU (V1), NVIDIA GPU (Ampere+ for V4)
-Software: GCC (V1), CUDA Toolkit 11.x+, cuBLAS, NVCC
-Dataset: MNIST files in data/ (download from http://yann.lecun.com/exdb/mnist/)
-OS: Linux (Ubuntu tested)
+## Why this matters
 
-Setup
-Place MNIST dataset files in data/:
+For AI engineering roles, shipping models is not only about accuracy—it is also about training/inference efficiency, GPU utilization, and reproducible performance experiments. This repository highlights those trade-offs by comparing multiple GPU optimization strategies side-by-side.
 
-train-images-idx3-ubyte
-train-labels-idx1-ubyte
-t10k-images-idx3-ubyte
-t10k-labels-idx1-ubyte
+## Implementations in this repo
 
-Run Instructions
-V1: Sequential CPU
-make clean && make src/V1
-./src/nn.exe
+- **V1 (`v1.c`)**: Sequential CPU baseline
+- **V2 (`v2.cu`)**: Naive CUDA implementation
+- **V3 (`v3.cu`)**: Optimized CUDA (kernel launch tuning, streams, memory strategy)
+- **V4 (`v4.cu`)**: Advanced CUDA with **cuBLAS/Tensor Cores (TF32)**
 
+## Reproducible setup
 
-Output: Epoch-wise loss, train accuracy, ~22.38s training time, ~96.78% test accuracy
+### Requirements
 
-V2: Naive GPU
-nvcc -O2 -o src/n src/v2.cu
-./src/n
+- Linux (Ubuntu tested)
+- GCC (for V1)
+- NVIDIA CUDA Toolkit 11.x+ (for V2/V3/V4)
+- cuBLAS (for V4)
+- NVIDIA GPU (V2/V3 on most CUDA-capable GPUs, **V4 expects Ampere+ for TF32 Tensor Core path**)
 
+### Verify environment
 
-Output: CPU/GPU metrics, ~183.16s GPU time, speedup, accuracy comparison
+```bash
+gcc --version
+nvcc --version
+nvidia-smi
+```
 
-V3: Optimized GPU
-nvcc -O2 -o src/V3/n src/v3.cu
-./src/n
+### Dataset layout (required by current code)
 
+The code expects MNIST files in this exact folder structure:
 
-Output: Optimizations, CPU/GPU metrics, ~6.78s GPU time, ~3.82x speedup, ~96.20% test accuracy
+```text
+data/
+  train-images-idx3-ubyte/train-images-idx3-ubyte
+  train-labels-idx1-ubyte/train-labels-idx1-ubyte
+  t10k-images-idx3-ubyte/t10k-images-idx3-ubyte
+  t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte
+```
 
-V4: Tensor Core GPU
-nvcc -arch=sm_80 -O2 -lcublas -o src/n src/v4.cu
-./src/n
+MNIST source: <https://www.kaggle.com/datasets/hojjatk/mnist-dataset>
 
+## Run training, evaluation, and benchmarks
 
-Output: Tensor Core details, CPU/GPU metrics, ~5.82s GPU time, ~4.51x speedup, ~91.93% test accuracy
+> Each executable runs end-to-end training for 3 epochs and then evaluation on the MNIST test set.
 
-Notes
+### V1 — CPU baseline
 
-Accuracy: V4 may have lower accuracy (~91.93%) due to TF32; V3 balances speed/accuracy (~96.20%)
-Performance: V3 (~3.82x) and V4 (~4.51x) outperform V1; V2 is slower due to naive design
-Troubleshooting: Verify CUDA/cuBLAS, dataset placement, GPU compatibility (nvidia-smi)
+```bash
+gcc -Wall -O2 -o v1_nn v1.c -lm
+./v1_nn
+```
 
+### V2 — Naive CUDA
 
+```bash
+nvcc -O2 -o v2_nn v2.cu
+./v2_nn
+```
+
+### V3 — Optimized CUDA
+
+```bash
+nvcc -O2 -o v3_nn v3.cu
+./v3_nn
+```
+
+### V4 — Tensor Core/cuBLAS path
+
+```bash
+nvcc -O2 -arch=sm_80 -lcublas -o v4_nn v4.cu
+./v4_nn
+```
+
+### Optional: existing profiling flow for V1
+
+```bash
+make -f makefile run
+```
+
+## Results (portfolio view)
+
+### Benchmark summary
+
+| Version | Device Path | Relative Speedup vs V1 | Test Accuracy |
+|---|---|---:|---:|
+| V1 | CPU | 1.00x | ~96.9% |
+| V2 | Naive CUDA | _Fill after run_ | _Fill after run_ |
+| V3 | Optimized CUDA | ~3.82x (reported) | ~96.2% |
+| V4 | Tensor Core + cuBLAS | ~4.51x (reported) | ~91.9% (TF32 trade-off) |
+
+### Figures (placeholders)
+
+- Training time comparison chart: `docs/figures/training-time-placeholder.png`
+- Speedup chart: `docs/figures/speedup-placeholder.png`
+- Accuracy vs speed trade-off chart: `docs/figures/accuracy-speed-placeholder.png`
+
+## Demo
+
+- Demo GIF placeholder: `docs/figures/demo-placeholder.gif`
+- Demo video placeholder: `https://example.com/demo-video`
+
+## Directory structure
+
+```text
+.
+├── v1.c
+├── v2.cu
+├── v3.cu
+├── v4.cu
+├── makefile
+├── data/
+├── docs/
+│   └── figures/
+├── README.md
+├── CONTRIBUTING.md
+└── LICENSE
+```
+
+## What I learned (AI engineering)
+
+- Profiling first is essential: identify where GPU acceleration actually helps before kernel tuning.
+- Memory bandwidth and transfer patterns are often the bottleneck, not only raw FLOPs.
+- Kernel launch configuration and stream strategy can materially impact throughput.
+- Tensor Core/TF32 acceleration can improve speed but may require accuracy trade-off analysis.
+- Reproducibility (fixed setup + clear commands + benchmark tables) is critical for fair model-system comparisons.
