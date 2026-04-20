@@ -1,2 +1,52 @@
-v2
-n
+# Binaries / executables
+*.out
+*.exe
+*.app
+*.bin
+
+# Object / library files
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+
+# CUDA build artifacts
+*.cubin
+*.ptx
+*.fatbin
+
+# Profiling / debug artifacts
+gmon.out
+gprof_*.txt
+callgraph.dot
+callgraph.png
+*.nvprof
+*.nsys-rep
+*.qdrep
+*.sqlite
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
