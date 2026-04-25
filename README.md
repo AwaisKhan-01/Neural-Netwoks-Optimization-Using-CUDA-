@@ -1,61 +1,117 @@
- 
-Neural Network Acceleration on GPUs for MNIST Classification
-Overview
-This project accelerates a neural network for MNIST digit classification using CUDA on GPUs, with four implementations:
+# Neural Network Optimization Using CUDA (MNIST)
 
-V1: Sequential CPU
-V2: Naive GPU with CUDA
-V3: Optimized GPU with dynamic configurations and streams
-V4: Advanced GPU using Tensor Cores via cuBLAS with TF32
+Accelerate a simple neural network for **MNIST digit classification** with progressively optimized implementations—from a baseline **CPU** version to **Tensor Core** acceleration on modern NVIDIA GPUs.
 
-Prerequisites
+## Highlights
 
-Hardware: CPU (V1), NVIDIA GPU (Ampere+ for V4)
-Software: GCC (V1), CUDA Toolkit 11.x+, cuBLAS, NVCC
-Dataset: MNIST files in data/ (download from http://yann.lecun.com/exdb/mnist/)
-OS: Linux (Ubuntu tested)
+- **Four implementations (V1–V4)** showing an optimization journey
+- CUDA kernels, GPU timing, and performance/accuracy comparisons
+- Optional **Tensor Core (TF32) GEMM** via **cuBLAS** (Ampere+)
 
-Setup
-Place MNIST dataset files in data/:
+## Project Structure / Versions
 
-train-images-idx3-ubyte
-train-labels-idx1-ubyte
-t10k-images-idx3-ubyte
-t10k-labels-idx1-ubyte
+| Version | Target | Description |
+|---|---|---|
+| **V1** | CPU | Sequential baseline implementation |
+| **V2** | GPU | Naive CUDA implementation |
+| **V3** | GPU | Optimized CUDA (dynamic configuration, streams) |
+| **V4** | GPU | Tensor Cores via **cuBLAS** (TF32) |
 
-Run Instructions
-V1: Sequential CPU
+## Requirements
+
+### Hardware
+
+- **V1:** Any CPU
+- **V2–V3:** NVIDIA GPU with CUDA support
+- **V4:** **NVIDIA Ampere (SM80) or newer** for Tensor Core TF32 path
+
+### Software
+
+- Linux (Ubuntu tested)
+- `gcc` / `g++` (for V1)
+- **CUDA Toolkit 11.x+**
+- `nvcc`
+- **cuBLAS** (for V4)
+
+## Dataset (MNIST)
+
+Download MNIST from:
+- http://yann.lecun.com/exdb/mnist/
+
+Place the following files under `data/`:
+
+- `train-images-idx3-ubyte`
+- `train-labels-idx1-ubyte`
+- `t10k-images-idx3-ubyte`
+- `t10k-labels-idx1-ubyte`
+
+## Build & Run
+
+> Commands below assume you are in the repository root.
+
+### V1 — Sequential CPU
+
+```bash
 make clean && make src/V1
 ./src/nn.exe
+```
 
+**Expected output:** epoch-wise loss/accuracy
+- Training time: ~22.38s
+- Test accuracy: ~96.78%
 
-Output: Epoch-wise loss, train accuracy, ~22.38s training time, ~96.78% test accuracy
+### V2 — Naive CUDA GPU
 
-V2: Naive GPU
+```bash
 nvcc -O2 -o src/n src/v2.cu
 ./src/n
+```
 
+**Expected output:** CPU/GPU metrics and comparison
+- GPU time (reported): ~183.16s
 
-Output: CPU/GPU metrics, ~183.16s GPU time, speedup, accuracy comparison
+### V3 — Optimized CUDA GPU
 
-V3: Optimized GPU
+```bash
 nvcc -O2 -o src/V3/n src/v3.cu
 ./src/n
+```
 
+**Expected output:** optimization notes + metrics
+- GPU time (reported): ~6.78s
+- Speedup: ~3.82×
+- Test accuracy: ~96.20%
 
-Output: Optimizations, CPU/GPU metrics, ~6.78s GPU time, ~3.82x speedup, ~96.20% test accuracy
+### V4 — Tensor Cores (cuBLAS, TF32)
 
-V4: Tensor Core GPU
+```bash
 nvcc -arch=sm_80 -O2 -lcublas -o src/n src/v4.cu
 ./src/n
+```
 
+**Expected output:** Tensor Core details + metrics
+- GPU time (reported): ~5.82s
+- Speedup: ~4.51×
+- Test accuracy: ~91.93%
 
-Output: Tensor Core details, CPU/GPU metrics, ~5.82s GPU time, ~4.51x speedup, ~91.93% test accuracy
+## Notes
 
-Notes
+- **Accuracy vs speed:** V4 may show lower accuracy due to **TF32** behavior; V3 typically offers a better speed/accuracy trade-off.
+- **Performance:** V3 and V4 outperform the CPU baseline; V2 is primarily educational and may be slower due to naive design.
 
-Accuracy: V4 may have lower accuracy (~91.93%) due to TF32; V3 balances speed/accuracy (~96.20%)
-Performance: V3 (~3.82x) and V4 (~4.51x) outperform V1; V2 is slower due to naive design
-Troubleshooting: Verify CUDA/cuBLAS, dataset placement, GPU compatibility (nvidia-smi)
+## Troubleshooting
 
+- Confirm CUDA and GPU availability:
+  ```bash
+  nvidia-smi
+  nvcc --version
+  ```
+- Ensure the MNIST files are in `data/` with the exact names listed above.
+- For V4, verify your GPU supports **SM80+** and that cuBLAS links correctly.
 
+---
+
+If you’d like, I can also:
+- add a **Results** section with a clean benchmark table,
+- document the **model architecture** (layers/activation/loss),
+- and include recommended compiler flags for reproducible performance.
