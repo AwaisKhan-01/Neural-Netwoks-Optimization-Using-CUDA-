@@ -110,8 +110,3 @@ nvcc -arch=sm_80 -O2 -lcublas -o src/n src/v4.cu
 - For V4, verify your GPU supports **SM80+** and that cuBLAS links correctly.
 
 ---
-
-If you’d like, I can also:
-- add a **Results** section with a clean benchmark table,
-- document the **model architecture** (layers/activation/loss),
-- and include recommended compiler flags for reproducible performance.
